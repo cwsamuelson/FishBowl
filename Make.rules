@@ -79,4 +79,4 @@ $(ALL_DIRS)::
 $(CLEAN_DIRS)::
 	$(MAKE) -C $(@:clean-%=%) clean
 
-world:: clean all
+world:: all
