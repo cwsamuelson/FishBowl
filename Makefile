@@ -11,7 +11,7 @@ PROGS=prog prog.lst
 
 all:: $(PROGS)
 
-prog: crt0.o crt1.o main.o
+prog: crt0.o main.o
 	$(LINK.c) -o $@ $^ $(LDLIBS)
 	$(SIZE) -A -x $@
 

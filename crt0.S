@@ -1,4 +1,4 @@
-    .section .init,"ax"
+    .section .text,"ax"
     .global _start
     .type   _start, @function
     .align 2
@@ -15,6 +15,11 @@ _start:     // This has to match the entry address in the ld script!!
     la sp,__stack_top
 
     add s0, sp, zero
-    jal zero, main
+    jal ra, main
     .cfi_endproc
+
+    csrw mie,x0
+1:
+    wfi
+    j 1b
 .end
