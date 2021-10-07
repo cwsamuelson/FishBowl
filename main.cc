@@ -16,8 +16,19 @@ void print(const char* text, UART*const uart){
   }
 }
 
+void println(const char* text, UART*const uart){
+  print(text, uart);
+  print("\n", uart);
+}
+void memcpy(unsigned char* destination, unsigned char* source, size_t length){
+  while(length > 0){
+    destination[length] = source[length];
+    --length;
+  }
+}
+
 int main(){
-  print(temp, UART0);
+  println(temp, UART0);
 
   return 0;
 }
