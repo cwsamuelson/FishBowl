@@ -46,7 +46,7 @@ all:: $(ALL_DIRS)
 	$(OBJCOPY) $< -O binary $@
 
 %.lst : %
-	$(OBJDUMP) $(OBJDUMPFLAGS) -dr $< > $<.lst
+	$(OBJDUMP) $(OBJDUMPFLAGS) -Cdr $< > $<.lst
 
 % : %.o
 	$(LINK.c) $(TARGET_ARCH) $(LDFLAGS) -o $@ $^ $(LDLIBS)
