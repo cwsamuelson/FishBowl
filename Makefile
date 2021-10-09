@@ -1,6 +1,7 @@
 TOP=.
 include $(TOP)/Make.rules
 
+#LDLIBS=-lc -lgcc
 LDLIBS=
 CFLAGS+=-O2
 
