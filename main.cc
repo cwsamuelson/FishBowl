@@ -25,9 +25,22 @@ const char* temp = "test string";
 
 union UART_e{
   struct _t{
-    unsigned char SEND;
+    // receive/transmit are the same address....
+    union {
+      volatile unsigned char READ; // readonly
+      volatile unsigned char WRITE; // write only
+    };
+    volatile unsigned char IER;
+    volatile unsigned char IIR; // read only
+    volatile unsigned char FCR; // write only
+    volatile unsigned char LCR;
+    volatile unsigned char MCR;
+    volatile unsigned char MSR;
+    volatile unsigned char SCR;
+    volatile unsigned char LS;
+    volatile unsigned char MS;
   } t;
-  unsigned char RAW[0x0100];
+  volatile unsigned char RAW[0x0100];
 };
 
 static_assert(sizeof(UART_e) == 0x100);
@@ -124,7 +137,7 @@ public:
   }
 
   void print(char c) const{
-    uart.t.SEND = c;
+    uart.t.WRITE = c;
   }
 
   void print(char const* str) const{
@@ -160,9 +173,18 @@ void memcpy(unsigned char* destination, unsigned char* source, size_t length){
   }
 }
 
+void print_bits(unsigned char c, UART& uart){
+  for(size_t i; i < 8; ++i, c = c >> 1){
+    uart.print(c & 1 ? '1' : '0');
+  }
+}
+
 int main(){
   UART u(UART0);
   u.print(temp);
+
+  print_bits(42, u);
+  u.print('\n');
 
   return 0;
 }
