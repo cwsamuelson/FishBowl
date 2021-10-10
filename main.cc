@@ -21,25 +21,118 @@ static_assert(sizeof(int64_t) == 8);
 
 //using size_t = uint32_t;
 
-const char* temp = "test string";
-
 union UART_e{
-  struct _t{
+  struct {
     // receive/transmit are the same address....
     union {
-      volatile unsigned char READ; // readonly
-      volatile unsigned char WRITE; // write only
+      union { // readonly
+        volatile const unsigned char READ;
+        volatile const unsigned char RBR;
+      };
+      union { // write only
+        volatile unsigned char WRITE;
+        volatile unsigned char THR;
+      };
     };
-    volatile unsigned char IER;
-    volatile unsigned char IIR; // read only
-    volatile unsigned char FCR; // write only
-    volatile unsigned char LCR;
-    volatile unsigned char MCR;
-    volatile unsigned char MSR;
+
+    union{
+      volatile unsigned char RAW;
+      struct{
+        volatile bool ERBFI:1;
+        volatile bool ETBEI:1;
+        volatile bool ELSI:1;
+        volatile bool EDSSI:1;
+        volatile unsigned char UNUSED:4;
+      };
+    } IER;
+
+    union{
+      union{ // read only
+        volatile const unsigned char RAW;
+        struct{
+          volatile const bool InterruptPending:1;
+          volatile const unsigned char InterruptID:3;
+          volatile const unsigned char UNUSED:2;
+          volatile const unsigned char FIFOsEnabled:2;
+        };
+      } IIR;
+
+      union{ // write only
+        volatile unsigned char RAW;
+        struct{
+          volatile bool FIFOEnable:1;
+          volatile bool RxFIFOReset:1;
+          volatile bool TxFIFOReset:1;
+          volatile bool DMASelect:1;
+          volatile unsigned char UNUSED:2;
+          volatile bool LSB:1;
+          volatile bool MSB:1;
+        };
+      } FCR;
+    };
+
+    union{
+      volatile unsigned char RAW;
+      struct{
+        volatile unsigned char WLS:2;
+        volatile bool STB:1;
+        volatile bool PEN:1;
+        volatile bool EPS:1;
+        volatile bool StickParity:1;
+        volatile bool SetBreak:1;
+        volatile bool DLAB:1;
+      };
+    } LCR;
+
+    union{
+      volatile unsigned char RAW;
+      struct{
+        volatile bool DTR:1;
+        volatile bool RTS:1;
+        volatile bool OUT:2;
+        volatile bool Loop:1;
+        volatile unsigned char UNUSED:3;
+      };
+    } MCR;
+
+    union{
+      volatile unsigned char RAW;
+      struct{
+        volatile bool DR:1;
+        volatile bool OE:1;
+        volatile bool PE:1;
+        volatile bool FE:1;
+        volatile bool BI:1;
+        volatile bool THRE:1;
+        volatile bool TEMT:1;
+        volatile bool RxFIFOErr:1;
+      };
+    } LSR;
+
+    union{
+      volatile unsigned char RAW;
+      struct{
+        volatile bool DCTS:1;
+        volatile bool DDSR:1;
+        volatile bool TERI:1;
+        volatile bool DDCD:1;
+        volatile bool CTS:1;
+        volatile bool DSR:1;
+        volatile bool RI:1;
+        volatile bool DCD:1;
+    };
+    } MSR;
+
     volatile unsigned char SCR;
-    volatile unsigned char LS;
-    volatile unsigned char MS;
-  } t;
+
+    /*union{
+      struct{
+        volatile unsigned char DLL;
+        volatile unsigned char DLM;
+      };
+      uint16_t DivisorLatch;
+    };*/
+  };
   volatile unsigned char RAW[0x0100];
 };
 
