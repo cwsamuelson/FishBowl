@@ -120,7 +120,7 @@ union UART_e{
         volatile bool DSR:1;
         volatile bool RI:1;
         volatile bool DCD:1;
-    };
+      };
     } MSR;
 
     volatile unsigned char SCR;
@@ -252,11 +252,11 @@ private:
 public:
   UART(UART_e& u)
     : uart(u){
-    // throw if u == nullptr
+    uart_init(u);
   }
 
   void print(char c) const{
-    uart.t.WRITE = c;
+    uart.WRITE = c;
   }
 
   void print(char const* str) const{
@@ -300,7 +300,11 @@ void print_bits(unsigned char c, UART& uart){
 
 int main(){
   UART u(UART0);
-  u.print(temp);
+  u.print("Read data:\n");
+  while(true){
+    u.print(uart_read_blocking(UART0));
+  }
+  u.print("data read\n");
 
   print_bits(42, u);
   u.print('\n');
