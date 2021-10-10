@@ -138,6 +138,32 @@ union UART_e{
 
 static_assert(sizeof(UART_e) == 0x100);
 
+void uart_init(UART_e& uart){
+  uart.LCR.WLS = 0b11;
+  uart.FCR.FIFOEnable = true;
+  uart.IER.ERBFI = true;
+}
+
+char uart_read(UART_e& uart){
+  if(uart.LSR.DR){
+    return uart.READ;
+  } else {
+    // sub-optimal return value....
+    return 0xFF;
+  }
+}
+
+char uart_read_blocking(UART_e& uart){
+  while(!uart.LSR.DR){
+    // wait...
+  }
+  return uart.READ;
+}
+
+void uart_write(UART_e& uart, char c){
+  uart.WRITE = c;
+}
+
 size_t string_length(char const * str) noexcept{
   size_t len = 0;
   for(; *str != '\0'; ++len);
