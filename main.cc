@@ -301,13 +301,12 @@ void print_bits(unsigned char c, UART& uart){
 int main(){
   UART u(UART0);
   u.print("Read data:\n");
-  while(true){
-    u.print(uart_read_blocking(UART0));
+  for(char c = 0; c != 'x'; c = uart_read_blocking(UART0)){
+    u.print(c);
   }
-  u.print("data read\n");
-
-  print_bits(42, u);
-  u.print('\n');
+  for(size_t i = 0; i < 10; ++i){
+    u.print((char)8);
+  }
 
   return 0;
 }
