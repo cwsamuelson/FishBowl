@@ -35,3 +35,9 @@ prog
 *.lst
 *.dtb
 *.dts
+
+.idea/*
+cmake-*/*
+build/*
+riscv-tools/*
+install/*

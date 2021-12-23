@@ -1,5 +1,5 @@
 // boot.S
-// bootloader for 'QOS'(?)
+// bootloader for 'FishBowl'
 // Chris Samuelson
 // 10 Oct 21
 
